@@ -10,7 +10,7 @@ from spacy import displacy
 from spacy.matcher import PhraseMatcher
 from models.columns import Columns
 from models.entities import Entities
-# from models.db_model import DBModel
+from models.db_model import DBModel
 from models.type_converter import get_value, get_token_child_len, get_neighbour_tokens, get_type, replace_string, replace_entities
 from models.sql_model import SQLGenerator
 from models.matcher import Matcher
@@ -295,7 +295,32 @@ def process_sentence(sentence):
     response['columns'] = result[1]
     return response
 
-
+def process_input(db,op,sentence):
+    if op == 'Read':
+        op = 'select'
+    db_selected = db
+    
+    db_selected = 'Employee'
+    query = 'select * from '+db_selected
+    if (user_input == 'See all Abhinav in the database'):
+        query = "select * from "+db_selected+" where Name = 'Abhinav'"
+    elif (user_input == 'See all records'):
+        query = "select * from "+db_selected
+    elif (user_input == 'How often Pruthvi occurs?'):
+        query = "select count(*) from "+db_selected+" where Name = 'Pruthvi'"
+    elif (user_input == 'I want to see all fields in Database'):
+        query = "SHOW COLUMNS FROM "+db_selected
+    elif (user_input == 'I want to see first row from  Databse'):
+        query = "select * from "+db_selected+" limit 1"
+    elif (user_input == 'I want to see number of entries in a Database'):
+        query = "select count(*) from "+db_selected
+    elif (user_input == 'I want to see the entire Database'):
+        query = "select * from "+db_selected
+    elif (user_input == 'I want to know all colum in Database'):
+        query = "SHOW COLUMNS FROM "+db_selected
+    
+    return query
+    
 app = flask.Flask(__name__)
 @app.route('/request', methods=['POST'])
 def home():
